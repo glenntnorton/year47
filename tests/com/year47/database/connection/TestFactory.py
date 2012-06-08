@@ -29,7 +29,7 @@
 import unittest
 from com.year47.database.connection import Factory
 
-class TestConnection(unittest.TestCase):
+class TestFactory(unittest.TestCase):
     
     def setUp(self):
         self.factory = Factory.Factory()
