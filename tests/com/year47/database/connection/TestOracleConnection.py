@@ -91,5 +91,5 @@ if __name__ == '__main__':
     unittest.main()
 
 
-# END: OracleConnection.py
+# END: TestOracleConnection.py
 # vim: set ai tw=79 sw=4 sts=4 set ft=python # 
