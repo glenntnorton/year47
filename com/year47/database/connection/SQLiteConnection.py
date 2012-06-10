@@ -37,34 +37,60 @@ except ImportError:
 
 
 class SQLiteConnection(Connection.Connection):
+    """SQLiteConnection(Connection.Connection) - inherits from Connection.
+    
+    Connection is an abstract class. Objects inheriting from Connection MUST override the
+    connect(), getExceptionHandler() and getQuoteHandler() methods or a
+    NotImplementedError will be raised."""
 
-    def __init__(self): pass
+    def __init__(self, database=None):
+        """initiate a SQLiteConnection"""
+        self.database = database
 
 
-    def connect(self, f):
+    def setDatabase(self, database):
+        """set the database i.e. /filename/ or /:memory/"""
+        self.database = database
+
+
+    def connect(self):
+        """connect to a SQLite database"""
+        if not self.database:
+            raise ValueError, "Database not set i.e. /filename/ or /:memory/"
+
         try:
-            self._sqlite_dbh = sqlite.connect(f, isolation_level=None)
+            self._sqlite_dbh = sqlite.connect(self.database, isolation_level=None)
             self._sqlite_dbh.text_factory = str
             return self._sqlite_dbh
         except(StandardError, sqlite.Error), err:
             print err       
 
+    def getDictionaryRow(self):
+        """pass this to your SQLCursor.setDictionaryRow() method if you prefer
+        key/value fetch* results."""
+        return sqlite.Row
+
 
     def getExceptionHandler(self):
+        """returns the top level error handler"""
         return self._sqlite_dbh.DatabaseError
 
 
     def getQuoteHandler(self):
+        '''return the default quote handler'''
         return self._quoteHandler
 
 
     def _quoteHandler(self, s):
-        # handles single & double qoutes
-        #
-        # FIXME
-        # consider removal, should be using parameters
-        # i.e. ("""SELECT * FROM test WHERE name = ?""", ('Glenn',))
-        # originally created to handle single quotes in strings i.e. "O''Reilly"
+        """should not be called directly. Use getQuoteHandler() instead.
+        
+        handles single & double qoutes
+        
+        **FIXME**
+        consider removal, should be using parameters.
+        i.e. (\"\"\"SELECT * FROM test WHERE name = ?\"\"\", ('Glenn',))
+        originally created to handle single quotes in strings i.e. "O''Reilly"
+        """
         new_s = ""
         tmp = s.split("'")
         for t in tmp[0:-1]:

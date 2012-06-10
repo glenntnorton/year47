@@ -29,14 +29,6 @@
 import unittest
 from com.year47.database.connection import SQLiteConnection
 
-
-# import pysqlite or sqlite3
-try:
-    import sqlite
-except ImportError:
-    import sqlite3 as sqlite
-
-
 class TestSQLiteConnection(unittest.TestCase):
 
     def setUp(self):
@@ -44,26 +36,32 @@ class TestSQLiteConnection(unittest.TestCase):
 
 
     def test_connect_to_file(self):
-        self.filename = 'test.db'
-        self.db = self.sqlite_connection.connect(self.filename)
+        self.sqlite_connection.setDatabase('test.db')
+        self.db = self.sqlite_connection.connect()
         self.assertTrue('Connection' in repr(self.db))
 
 
     def test_connect_to_memory(self):
-        self.db = self.sqlite_connection.connect(':memory')
+        self.sqlite_connection.setDatabase(':memory')
+        self.db = self.sqlite_connection.connect()
         self.assertTrue('Connection' in repr(self.db))
 
 
+    def test_setDatabase(self):
+        self.sqlite_connection.setDatabase('test.db')
+        self.assertEqual('test.db', self.sqlite_connection.database)
+
+
     def test_getExceptionHandler(self):
-        self.filename = 'test.db'
-        self.db = self.sqlite_connection.connect(self.filename)
+        self.sqlite_connection.setDatabase('test.db')
+        self.db = self.sqlite_connection.connect()
         self.handler = self.sqlite_connection.getExceptionHandler()
         self.assertTrue('DatabaseError' in repr(self.handler))
 
 
     def test_getQouteHandler(self):
-        self.filename = 'test.db'
-        self.db = self.sqlite_connection.connect(self.filename)
+        self.sqlite_connection.setDatabase('test.db')
+        self.db = self.sqlite_connection.connect()
         self.handler = self.sqlite_connection.getQuoteHandler()
         self.assertTrue('_quoteHandler' in repr(self.handler))
 
