@@ -32,13 +32,17 @@ from com.year47.database.connection import OracleConnection
 from com.year47.database.connection import SQLiteConnection
 
 class ConnectionFactory(Factory.Factory):
-
+    """ConnectionFactory(Factory.Factory): - inherits from Factory.
+    
+    Objects inheriting from Factory MUST override the getConnection() method 
+    or a NotImplementedError will be raised."""
     def __init__(self): pass
 
 
     def getConnection(self, name):
+        """getConnection - currently accepts 'mysql, 'oracle', 'sqlite'"""
         if not name:
-            raise ValueError, "No factory call name required."
+            raise ValueError, "name required"
 
         try:
             if 'mysql' in name.lower():

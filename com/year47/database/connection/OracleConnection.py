@@ -30,8 +30,20 @@ import cx_Oracle
 from com.year47.database.connection import Connection
 
 class OracleConnection(Connection.Connection):
+    """OracleConnection(Connection.Connection) - inherits from Connection. 
     
-    def __init__(self, username=None, passwd=None, ip_address='127.0.0.1', sid=None, autocommit=0):
+    Objects inheriting from Connection MUST override the
+    connect(), getExceptionHandler() and getQuoteHandler() methods or a
+    NotImplementedError will be raised.""" 
+
+    def __init__(self, username=None, passwd=None, ip_address='127.0.0.1', 
+                sid=None, autocommit=1):
+        """initiate an OracleConnection.
+
+        username, passwd, ip_address, sid & autocommit attributes may be 
+        assigned here or through appropriate set* methods.
+
+        """ 
         self.username = username
         self.passwd = passwd
         self.ip_address = ip_address
@@ -40,32 +52,32 @@ class OracleConnection(Connection.Connection):
 
     
     def setUsername(self, u):
+        """assign Oracle username"""
         self.username = u
 
     
     def setPasswd(self, p):
+        """assign Oracle password"""
         self.passwd = p
 
 
     def setIPAddress(self, ip_address='127.0.0.1'):
+        """assign server domain or IP address"""
         self.ip_address = ip_address
 
 
     def setSID(self, s):
+        """assign Oracle system identifier"""
         self.sid = s
 
 
-    def setAutocommit(self, autocommit=0):
+    def setAutocommit(self, autocommit=1):
+        """assign Oracle transaction autocommit. default is 1"""
         self.autocommit = autocommit
 
 
-    def connect(self, **kwargs):
-        if not self.username: self.username = kwargs['username']
-        if not self.passwd: self.passwd = kwargs['passwd']
-        if not self.ip_address: self.ip_address = kwargs['ip_address'],
-        if not self.sid: self.sid = kwargs['sid'],
-        if not self.autocommit: self.autocommit = kwargs['autocommit']
-
+    def connect(self):
+        """connect to a Oracle database"""
         try:
             self.connection_string = "%s/%s@%s/%s" % (
                 self.username,
@@ -75,20 +87,33 @@ class OracleConnection(Connection.Connection):
             )
             self._oracle_dbh = cx_Oracle.connect(self.connection_string)
             self._oracle_dbh.autocommit = self.autocommit
+            return self._oracle_dbh
 
         except(StandardError, cx_Oracle.Error), err:
             raise cx_Oracle.Error(err)
 
-        return self._oracle_dbh
+
 
     def getExceptionHandler(self):
+        """returns the top level error handler"""
         return cx_Oracle.Error
 
+
     def getQuoteHandler(self):
+        """returns the default quote handler"""
         return self._quoteHandler
 
+
     def _quoteHandler(self, s):
-        # handles single & double qoutes
+        """should not be called directly. Use getQuoteHandler() instead.
+        
+        handles single & double qoutes
+        
+        **FIXME**
+        consider removal, should be using parameters.
+        i.e. (\"\"\"SELECT * FROM test WHERE name = ?\"\"\", ('Glenn',))
+        originally created to handle single quotes in strings i.e. "O''Reilly"
+        """
         new_s = ""
         tmp = s.split("'")
         for t in tmp[0:-1]:
@@ -104,7 +129,6 @@ class OracleConnection(Connection.Connection):
         new_s += tmp[-1]
 
         return new_s
-
 
 
 # END: OracleConnection.py

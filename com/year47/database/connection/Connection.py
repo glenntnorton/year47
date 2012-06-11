@@ -33,9 +33,10 @@ class Connection(object):
     connect(), getExceptionHandler() and getQuoteHandler() methods or a
     NotImplementedError will be raised."""
 
-    def connect             (self):     raise NotImplementedError
-    def getExceptionHandler (self):     raise NotImplementedError
-    def getQuoteHandler     (self):     raise NotImplementedError
+    def connect(self): raise NotImplementedError
+    def getExceptionHandler(self): raise NotImplementedError
+    def getQuoteHandler(self): raise NotImplementedError
+
 
 # END: Connection.py
 # vim: set ai tw=79 sw=4 sts=4 set ft=python # 

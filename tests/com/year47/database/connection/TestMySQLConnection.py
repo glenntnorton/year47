@@ -70,8 +70,6 @@ class TestMySQLConnection(unittest.TestCase):
         self.mysql_connection.setAutocommit(1)
 
         self._mysql_dbh = self.mysql_connection.connect()
-        self._mysql_dbh._transactional = self.mysql_connection.autocommit
-
 
         self.assertTrue('_mysql.connection' in repr(self._mysql_dbh))
         self.assertEqual(self._mysql_dbh._transactional, 1)

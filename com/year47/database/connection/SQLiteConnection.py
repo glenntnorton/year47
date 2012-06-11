@@ -49,14 +49,14 @@ class SQLiteConnection(Connection.Connection):
 
 
     def setDatabase(self, database):
-        """set the database i.e. /filename/ or /:memory/"""
+        """set the database i.e. 'filename' or ':memory'"""
         self.database = database
 
 
     def connect(self):
         """connect to a SQLite database"""
         if not self.database:
-            raise ValueError, "Database not set i.e. /filename/ or /:memory/"
+            raise ValueError, "Database not set i.e. 'filename' or ':memory'"
 
         try:
             self._sqlite_dbh = sqlite.connect(self.database, isolation_level=None)
@@ -77,7 +77,7 @@ class SQLiteConnection(Connection.Connection):
 
 
     def getQuoteHandler(self):
-        '''return the default quote handler'''
+        """returns the default quote handler"""
         return self._quoteHandler
 
 

@@ -27,7 +27,13 @@
 #####
 
 class Factory(object):
-    def getConnection   (self, name):   raise NotImplementedError
+    """Factory(object): Factory is an abstract class. 
+    
+    Objects inheriting from Factory MUST override the getConnection() method 
+    or a NotImplementedError will be raised."""
+
+    def getConnection(self, name): raise NotImplementedError
+
 
 # END: Factory.py
 # vim: set ai tw=79 sw=4 sts=4 set ft=python # 

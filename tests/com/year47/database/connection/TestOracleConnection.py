@@ -75,8 +75,6 @@ class TestOracleConnection(unittest.TestCase):
             self.oracle_connection.sid
         )
         self._oracle_dbh = self.oracle_connection.connect()
-        self._oracle_dbh.autocommit = self.oracle_connection.autocommit
-
 
         self.assertTrue('cx_Oracle.Connection' in repr(self._oracle_dbh))
         self.assertEqual(self._oracle_dbh.autocommit, 1)

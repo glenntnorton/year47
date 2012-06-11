@@ -31,9 +31,20 @@ from com.year47.database.connection import Connection
 
 
 class MySQLConnection(Connection.Connection):
+    """MySQLConnection(Connection.Connection) - inherits from Connection. 
     
-    def __init__(self, host=None, user=None, passwd=None, db=None,
+    Objects inheriting from Connection MUST override the
+    connect(), getExceptionHandler() and getQuoteHandler() methods or a
+    NotImplementedError will be raised."""
+    
+    def __init__(self, host=None, user=None, passwd=None, db=None, 
             autocommit=1):
+        """initiate a MySQLConnection.
+
+        host, user, passwd, db & autocommit attributes may be assigned here or
+        through appropriate set* methods.
+
+        """
         self.host = host
         self.user = user
         self.passwd = passwd
@@ -42,27 +53,33 @@ class MySQLConnection(Connection.Connection):
 
 
     def setHost(self, host):
+        """assign mysql hostname"""
         self.host = host
 
 
     def setUser(self, user):
+        """assign MySQL username"""
         self.user = user
 
 
     def setPasswd(self, passwd):
+        """assign MySQL password"""
         self.passwd = passwd
 
 
     def setDb(self, db):
+        """assign MySQL database"""
         self.db = db
 
 
-    def setAutocommit(self, autocommit):
+    def setAutocommit(self, autocommit=1):
+        """assign autocommit to bypass commit requirement. default is 1"""
         self.autocommit = autocommit
 
 
 
     def connect(self):
+        """connect to a MySQL database"""
         try:
             self._mysql_dbh = MySQLdb.connect( 
                 host = self.host,
@@ -72,17 +89,20 @@ class MySQLConnection(Connection.Connection):
             )
 
             self._mysql_dbh._transactional = self.autocommit
+            return self._mysql_dbh
+
         except(StandardError, MySQLdb.Error), err:
             print err
 
-        return self._mysql_dbh
 
 
     def getExceptionHandler(self):
+        """returns the top level error handler"""
         return self._mysql_dbh.Error
 
 
     def getQuoteHandler(self):
+        """returns the default quote handler"""
         return self._mysql_dbh.escape
 
 
